@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Others
+.vscode/
+slack_app_manifest.yaml
+test.py
+logs/
