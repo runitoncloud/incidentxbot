@@ -1,0 +1,12 @@
+apiVersion: v2
+name: incidentxbot
+description: An incident management solution for Slack
+maintainers:
+  - name: Aymen Segni
+    email: segniaymen1@gmail.com
+
+type: application
+
+version: 0.2.0
+
+appVersion: '0.2.0'

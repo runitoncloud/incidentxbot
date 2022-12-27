@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: incidentxbot
+  name: incidentxbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: incidentxbot
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: incidentxbot
+    spec:
+      containers:
+        - name: incidentxbot
+          image: aymensegni/incidentxbot
+          command: ['./wait-for-it.sh']
+          args: ['db:5432', '--', 'python3', 'main.py']
+          envFrom:
+            - secretRef:
+                name: incidentxbot
+            - configMapRef:
+                name: incidentxbot
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512M
+            requests:
+              cpu: 250m
+              memory: 256M

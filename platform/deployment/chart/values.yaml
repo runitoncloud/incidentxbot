@@ -1,0 +1,111 @@
+# Default values for incidentxbot.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+affinity: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+database:
+  enabled: false
+  password:
+
+envFromSecret:
+  enabled: false
+  secretName:
+
+envVars:
+  AUTH0_DOMAIN: mydomain
+  AUTO_CREATE_RCA: false
+  INCIDENTS_DIGEST_CHANNEL: incidents
+  INCIDENT_AUTO_GROUP_INVITE_ENABLED: false
+  INCIDENT_AUTO_GROUP_INVITE_GROUP_NAME: mygroup
+  INCIDENT_EXTERNAL_PROVIDERS_ENABLED: false
+  INCIDENT_EXTERNAL_PROVIDERS_LIST: github
+  INCIDENT_AUTO_CREATE_FROM_REACT_ENABLED: true
+  INCIDENT_AUTO_CREATE_FROM_REACT_EMOJI_NAME: create-incident
+  PAGERDUTY_INTEGRATION_ENABLED: false
+  STATUSPAGE_INTEGRATION_ENABLED: false
+
+healthCheck:
+  enabled: true
+  path: /api/v1/health
+  port: 3000
+  scheme: HTTP
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 1
+
+image:
+  repository: aymensegni/incidentxbot
+  tag: 0.2.1
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+ingress:
+  enabled: true
+  className: ''
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: incidentxbot.mydomain.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: incidentxbot-tls
+      hosts:
+        - incidentxbot.mydomain.com
+
+nodeSelector: {}
+
+podAnnotations: {}
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+replicaCount: 1
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512M
+  requests:
+    cpu: 250m
+    memory: 256M
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ''
+
+tolerations: []
